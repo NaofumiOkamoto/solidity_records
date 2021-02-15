@@ -30,10 +30,10 @@ class App {
 
     private routes(): void {
 
-        this.express.get("/", (req, res, next) => {
-            res.send("sucsess!!!!");
-            // res.sendFile(process.cwd() + "/vue/dist/index.html");
-        });
+        // this.express.get("/", (req, res, next) => {
+        //     res.send("sucsess!!!!");
+        //     // res.sendFile(process.cwd() + "/vue/dist/index.html");
+        // });
 
         // user route
         this.express.use("/api", Routes);
