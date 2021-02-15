@@ -48,7 +48,7 @@ class App {
 
 
             this.databaseConnect().then(result =>{
-                console.log("result", result)
+                // console.log("result", result)
                 res.send(result)
             })
 
@@ -56,7 +56,7 @@ class App {
     }
     private databaseConnect(){
         var mysql = Mysql
-        return mysql.connect('localhost', 'root', '', 'solidity_records').then( result =>{
+        return mysql.connect('localhost', 'root', 'N-okamoto0803', 'solidity_records').then( result =>{
             return result;
         })
     }

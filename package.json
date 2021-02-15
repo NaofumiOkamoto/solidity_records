@@ -1,7 +1,6 @@
 {
   "name": "node",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "ts-node index.ts",
@@ -25,5 +24,14 @@
     "typescript": "^4.1.3",
     "webpack": "^5.21.2",
     "webpack-cli": "^4.5.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NaofumiOkamoto/solidity_records_node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NaofumiOkamoto/solidity_records_node/issues"
+  },
+  "homepage": "https://github.com/NaofumiOkamoto/solidity_records_node#readme",
+  "description": ""
 }
