@@ -13,6 +13,7 @@ export class Mysql {
         });
         const sql = "SELECT * FROM products WHERE `Image Position` = 1";
         const result = await this.connection.query(sql);
+        console.log("length", result.lenght);
         return result;
     }
 

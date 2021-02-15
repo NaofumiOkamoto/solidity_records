@@ -44,19 +44,19 @@ class App {
             console.log("baseUrl", req.baseUrl);
             console.log("params", req.params);
             console.log("query.num", req.query.num);
-            const count: number = Number(req.query.num);
+            // const count: number = Number(req.query.num);
 
 
             this.databaseConnect().then(result =>{
-                console.log(result[count])
-                res.send(result[count])
+                console.log("result", result)
+                res.send(result)
             })
 
         });
     }
     private databaseConnect(){
         var mysql = Mysql
-        return mysql.connect('localhost', 'root', 'N-okamoto0803', 'solidity_records').then( result =>{
+        return mysql.connect('localhost', 'root', '', 'solidity_records').then( result =>{
             return result;
         })
     }
