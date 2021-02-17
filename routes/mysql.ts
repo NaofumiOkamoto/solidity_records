@@ -4,6 +4,7 @@ export class Mysql {
     private connection: mysql.Connection;
 
     public async connect(host: string, user: string, password: string, database: string) {
+        console.log("mysql.ts connect")
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -16,10 +17,21 @@ export class Mysql {
         console.log("length", result.lenght);
         return result;
     }
+    public async find(host: string, user: string, password: string, database: string, handle: string) {
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sql = 'SELECT * FROM products WHERE `Handle` = "' + handle + '"';
+        console.log("sql", sql)
+        const result = await this.connection.query(sql);
+        return result;
+    }
 
     public async query(query: string, parameters: any[] = []) {
-        console.log('this.connection2', this.connection);
-        console.log('query', query);
         // return (await this.connection.query(query, parameters));
     }
 
