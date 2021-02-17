@@ -68,13 +68,13 @@ class App {
     }
     private databaseConnect(){
         var mysql = Mysql
-        return mysql.connect('localhost', 'root', '', 'solidity_records').then( result =>{
+        return mysql.connect('localhost', 'root', 'N-okamoto0803', 'solidity_records').then( result =>{
             return result;
         })
     }
     private databaseFind(handle){
         var mysql = Mysql
-        return mysql.find('localhost', 'root', '', 'solidity_records', handle).then( result =>{
+        return mysql.find('localhost', 'root', 'N-okamoto0803', 'solidity_records', handle).then( result =>{
             return result;
         })
     }
