@@ -75,7 +75,7 @@ class App {
     }
     private databaseFind(sql){
         var mysql = Mysql
-        return mysql.find('localhost', 'root', 'N-okamoto0803', 'solidity_records', handle).then( result =>{
+        return mysql.find('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
