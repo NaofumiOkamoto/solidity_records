@@ -17,7 +17,7 @@ export class Mysql {
         console.log("length", result.lenght);
         return result;
     }
-    public async find(host: string, user: string, password: string, database: string, handle: string) {
+    public async find(host: string, user: string, password: string, database: string, sql: string) {
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -25,9 +25,9 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sql = 'SELECT * FROM products WHERE `Handle` = "' + handle + '"';
-        console.log("sql", sql)
-        const result = await this.connection.query(sql);
+        const sqltext = 'SELECT * FROM products ' + sql;
+        console.log("async-sql", sql)
+        const result = await this.connection.query(sqltext);
         return result;
     }
 

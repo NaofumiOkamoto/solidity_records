@@ -40,24 +40,25 @@ class App {
 
         // handle undefined routes
         this.express.get("/api", (req, res, next) => {
-            console.log("originalUrl", req.originalUrl);
-            console.log("baseUrl", req.baseUrl);
-            console.log("params", req.params);
-            console.log("query.handle", req.query.handle);
-            const handle: string = String(req.query.handle);
+            // console.log("originalUrl : ", req.originalUrl);
+            // console.log("baseUrl : ", req.baseUrl);
+            // console.log("params : ", req.params);
+            // console.log("query.handle : ", req.query.handle);
+            // const handle: string = String(req.query.handle);
+            const sql: string = String(req.query.sql);
 
+            console.log("paramssql", sql);
 
-            console.log("handle", handle);
-            console.log("handle", handle == "undefined");
-
-            if (handle == "undefined"){
+            if (sql == "undefined"){
                 this.databaseConnect().then(result =>{
                     // console.log("result", result)
+                    console.log("Connect")
                     res.send(result)
                     return
                 });
             }else{
-                this.databaseFind(handle).then(result =>{
+                this.databaseFind(sql).then(result =>{
+                    console.log("find-sql", sql)
                     res.send(result)
                     return
                 })
@@ -72,9 +73,10 @@ class App {
             return result;
         })
     }
-    private databaseFind(handle){
+    private databaseFind(sql){
         var mysql = Mysql
-        return mysql.find('localhost', 'root', '', 'solidity_records', handle).then( result =>{
+        console.log("function-sql", sql)
+        return mysql.find('localhost', 'root', '', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
