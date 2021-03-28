@@ -30,13 +30,26 @@ class App {
 
     private routes(): void {
 
-        // this.express.get("/", (req, res, next) => {
-        //     res.send("sucsess!!!!");
-        //     // res.sendFile(process.cwd() + "/vue/dist/index.html");
-        // });
-
         // user route
         this.express.use("/api", Routes);
+        this.express.use("/getApi", Routes);
+
+        this.express.get("/getApi", (req, res, next) => {
+            console.log("find-sql")
+            const sql: string = String(req.query.sql);
+            this.getDatabaseProducts(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
+        this.express.get("/getCategory", (req, res, next) => {
+            console.log("category-sql")
+            const sql: string = String(req.query.sql);
+            this.getDatabaseCategory(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
 
         // handle undefined routes
         this.express.get("/api", (req, res, next) => {
@@ -67,15 +80,27 @@ class App {
 
         });
     }
+    private getDatabaseProducts(sql){
+        var mysql = Mysql
+        return mysql.getProducts('localhost', 'root', '', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private getDatabaseCategory(sql){
+        var mysql = Mysql
+        return mysql.getCategorys('localhost', 'root', '', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
     private databaseConnect(){
         var mysql = Mysql
-        return mysql.connect('localhost', 'root', 'N-okamoto0803', 'solidity_records').then( result =>{
+        return mysql.connect('localhost', 'root', '', 'solidity_records').then( result =>{
             return result;
         })
     }
     private databaseFind(sql){
         var mysql = Mysql
-        return mysql.find('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+        return mysql.find('localhost', 'root', '', 'solidity_records', sql).then( result =>{
             return result;
         })
     }

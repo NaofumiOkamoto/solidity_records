@@ -2,6 +2,36 @@ import * as mysql from 'promise-mysql';
 
 export class Mysql {
     private connection: mysql.Connection;
+    public async getProducts(host: string, user: string, password: string, database: string, sql: string) {
+        console.log("getProducts", sql);
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'SELECT * FROM new_products ' + sql;
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
+
+    public async getCategorys(host: string, user: string, password: string, database: string, sql: string) {
+        console.log("getCategorys", sql);
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'select distinct ' + sql +  ' from new_products order by label ASC';
+        console.log("sqltext", sqltext)
+        const result = await this.connection.query(sqltext);
+        console.log("result", result)
+        return result;
+    }
+
 
     public async connect(host: string, user: string, password: string, database: string) {
         console.log("mysql.ts connect")
