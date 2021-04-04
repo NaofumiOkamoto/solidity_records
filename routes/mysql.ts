@@ -15,6 +15,19 @@ export class Mysql {
         const result = await this.connection.query(sqltext);
         return result;
     }
+    public async getGenre(host: string, user: string, password: string, database: string, sql: string) {
+        console.log("getProducts", sql);
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'SELECT * FROM new_genre ' + sql;
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
 
     public async getCategorys(host: string, user: string, password: string, database: string, sql: string) {
         console.log("getCategorys", sql);

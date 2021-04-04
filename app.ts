@@ -42,6 +42,14 @@ class App {
                 return
             })
         });
+        this.express.get("/getGenre", (req, res, next) => {
+            console.log("/getGenre")
+            const sql: string = String(req.query.sql);
+            this.getDatabaseGenre(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
         this.express.get("/getCategory", (req, res, next) => {
             console.log("category-sql")
             const sql: string = String(req.query.sql);
@@ -82,25 +90,31 @@ class App {
     }
     private getDatabaseProducts(sql){
         var mysql = Mysql
-        return mysql.getProducts('localhost', 'root', '', 'solidity_records', sql).then( result =>{
+        return mysql.getProducts('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private getDatabaseGenre(sql){
+        var mysql = Mysql
+        return mysql.getGenre('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private getDatabaseCategory(sql){
         var mysql = Mysql
-        return mysql.getCategorys('localhost', 'root', '', 'solidity_records', sql).then( result =>{
+        return mysql.getCategorys('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private databaseConnect(){
         var mysql = Mysql
-        return mysql.connect('localhost', 'root', '', 'solidity_records').then( result =>{
+        return mysql.connect('localhost', 'root', 'N-okamoto0803', 'solidity_records').then( result =>{
             return result;
         })
     }
     private databaseFind(sql){
         var mysql = Mysql
-        return mysql.find('localhost', 'root', '', 'solidity_records', sql).then( result =>{
+        return mysql.find('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
