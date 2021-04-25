@@ -38,7 +38,7 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'select distinct ' + sql +  ' from new_products order by label ASC';
+        const sqltext = 'select distinct `' + sql +  '` from new_products order by `' + sql + '` ASC';
         console.log("sqltext", sqltext)
         const result = await this.connection.query(sqltext);
         console.log("result", result)

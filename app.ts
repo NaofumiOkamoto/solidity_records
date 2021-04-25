@@ -51,8 +51,8 @@ class App {
             })
         });
         this.express.get("/getCategory", (req, res, next) => {
-            console.log("category-sql")
             const sql: string = String(req.query.sql);
+            console.log("category-sql", sql)
             this.getDatabaseCategory(sql).then(result =>{
                 res.send(result)
                 return
@@ -101,6 +101,7 @@ class App {
         })
     }
     private getDatabaseCategory(sql){
+        console.log("getDatabeseCategory")
         var mysql = Mysql
         return mysql.getCategorys('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
