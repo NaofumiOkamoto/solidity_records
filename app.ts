@@ -2,6 +2,7 @@ import * as bodyParser from "body-parser";
 import * as express from "express";
 import Routes from "./routes/routes";
 import Mysql from "./routes/mysql";
+// import cors from  "cors";
 
 const path = require('path');
 
@@ -23,9 +24,11 @@ class App {
     // Configure Express middleware.
     private middleware(): void {
         console.log("app.ts middleware()")
+        const cors = require("cors")
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: false }));
         this.express.use(express.static(process.cwd() + "/vue/dist/"));
+        this.express.use(cors());
     }
 
     private routes(): void {
@@ -35,7 +38,9 @@ class App {
         this.express.use("/getApi", Routes);
 
         this.express.get("/getApi", (req, res, next) => {
-            console.log("find-sql")
+            // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
+            // res.status(201).send('ok')
+            console.log("app.ts getApi req :", req.query.sql)
             const sql: string = String(req.query.sql);
             this.getDatabaseProducts(sql).then(result =>{
                 res.send(result)
@@ -90,26 +95,26 @@ class App {
     }
     private getDatabaseProducts(sql){
         var mysql = Mysql
-        return mysql.getProducts('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+        return mysql.getProducts('localhost', 'root', '', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private getDatabaseGenre(sql){
         var mysql = Mysql
-        return mysql.getGenre('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+        return mysql.getGenre('localhost', 'root', '', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private getDatabaseCategory(sql){
         console.log("getDatabeseCategory")
         var mysql = Mysql
-        return mysql.getCategorys('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+        return mysql.getCategorys('localhost', 'root', '', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private databaseConnect(){
         var mysql = Mysql
-        return mysql.connect('localhost', 'root', 'N-okamoto0803', 'solidity_records').then( result =>{
+        return mysql.connect('localhost', 'root', '', 'solidity_records').then( result =>{
             return result;
         })
     }
