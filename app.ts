@@ -95,26 +95,26 @@ class App {
     }
     private getDatabaseProducts(sql){
         var mysql = Mysql
-        return mysql.getProducts('localhost', 'root', '', 'solidity_records', sql).then( result =>{
+        return mysql.getProducts('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private getDatabaseGenre(sql){
         var mysql = Mysql
-        return mysql.getGenre('localhost', 'root', '', 'solidity_records', sql).then( result =>{
+        return mysql.getGenre('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private getDatabaseCategory(sql){
         console.log("getDatabeseCategory")
         var mysql = Mysql
-        return mysql.getCategorys('localhost', 'root', '', 'solidity_records', sql).then( result =>{
+        return mysql.getCategorys('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private databaseConnect(){
         var mysql = Mysql
-        return mysql.connect('localhost', 'root', '', 'solidity_records').then( result =>{
+        return mysql.connect('localhost', 'root', 'N-okamoto0803', 'solidity_records').then( result =>{
             return result;
         })
     }
