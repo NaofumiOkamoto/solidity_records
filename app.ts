@@ -38,11 +38,16 @@ class App {
         this.express.use("/getApi", Routes);
 
         this.express.get("/getApi", (req, res, next) => {
-            // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
-            // res.status(201).send('ok')
             console.log("app.ts getApi req :", req.query.sql)
             const sql: string = String(req.query.sql);
             this.getDatabaseProducts(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
+        this.express.get("/getProductsLike", (req, res, next) => {
+            const sql: string = String(req.query.sql);
+            this.getDatabaseProductsLike(sql).then(result =>{
                 res.send(result)
                 return
             })
@@ -66,11 +71,6 @@ class App {
 
         // handle undefined routes
         this.express.get("/api", (req, res, next) => {
-            // console.log("originalUrl : ", req.originalUrl);
-            // console.log("baseUrl : ", req.baseUrl);
-            // console.log("params : ", req.params);
-            // console.log("query.handle : ", req.query.handle);
-            // const handle: string = String(req.query.handle);
             const sql: string = String(req.query.sql);
 
             console.log("paramssql", sql);
@@ -96,6 +96,13 @@ class App {
     private getDatabaseProducts(sql){
         var mysql = Mysql
         return mysql.getProducts('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    // sql で LIKE 使って取得する時
+    private getDatabaseProductsLike(sql){
+        var mysql = Mysql
+        return mysql.getProductsLike('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }

@@ -15,8 +15,23 @@ export class Mysql {
         const result = await this.connection.query(sqltext);
         return result;
     }
+    public async getProductsLike(host: string, user: string, password: string, database: string, sql: string) {
+        console.log("getProductsLike", sql);
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const colmun = sql.split('_')[0]
+        const value = sql.split('_')[1]
+        const sqltext = 'SELECT * FROM new_products WHERE ' + colmun + ' LIKE "%' + value + '%"';
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
     public async getGenre(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("getProducts", sql);
+        console.log("getGenre", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -26,6 +41,7 @@ export class Mysql {
         });
         const sqltext = 'SELECT * FROM new_genre ' + sql;
         const result = await this.connection.query(sqltext);
+        console.log("getGenre result : ", result);
         return result;
     }
 
