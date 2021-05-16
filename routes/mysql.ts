@@ -30,6 +30,33 @@ export class Mysql {
         const result = await this.connection.query(sqltext);
         return result;
     }
+    public async getProductsGenreLike(host: string, user: string, password: string, database: string, sql: string) {
+        console.log("getProductsGenreLike", sql);
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const arrayGenreId = sql.split('_')
+        let result = []
+        for ( let i = 0; i < arrayGenreId.length; i++ ) {
+            let sqltext
+            if ( arrayGenreId.some( id => id.length === 1 ) ) {
+                sqltext = 'SELECT * FROM new_products WHERE genre = ' + arrayGenreId[i];
+            } else {
+                sqltext = 'SELECT * FROM new_products WHERE genre LIKE "%' + arrayGenreId[i] + '%"';
+            }
+            const resultArray = await this.connection.query(sqltext)
+            for ( let j = 0; j < resultArray.length; j++ ) {
+                if ( !result.some(product => product.item_id === resultArray[j].item_id) ) {
+                    result.push(resultArray[j]);
+                }
+            }
+        }
+        return result;
+    }
     public async getGenre(host: string, user: string, password: string, database: string, sql: string) {
         console.log("getGenre", sql);
         this.connection = await mysql.createConnection({
@@ -39,9 +66,31 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'SELECT * FROM new_genre ' + sql;
-        const result = await this.connection.query(sqltext);
-        console.log("getGenre result : ", result);
+        const equal = sql.indexOf('=')
+        const sliceSql = sql.slice(equal + 2)
+        let result = []
+        // genreが1つの時
+        if ( sliceSql.indexOf('_') === -1 && sql !== 'genre' && sql.indexOf('main') === -1 ) {
+            console.log("genreが1つの時")
+            const sqltext = 'SELECT * FROM new_genre ' + sql;
+            result.push((await this.connection.query(sqltext))[0]);
+        // genreが2つ以上ある時 (101_102など)
+        } else if ( sliceSql.indexOf('_') !== -1 && sql.indexOf('All') === -1 ) {
+            console.log("genreが2つ以上の時")
+            const arrayGenreId = sliceSql.split('_')
+            for ( let i = 0; i < arrayGenreId.length; i++ ) {
+                const sqltext = 'SELECT * FROM new_genre where id = ' + Number(arrayGenreId[i]);
+                console.log(sqltext)
+                result.push((await this.connection.query(sqltext))[0])
+            }
+        } else {
+        // genre一覧を取得するとき
+            console.log("genre一覧取得")
+            let text = sql.split('_')[0]
+            const sqltext = 'SELECT * FROM new_genre ' + text;
+            console.log(sqltext)
+            result = await this.connection.query(sqltext)
+        }
         return result;
     }
 

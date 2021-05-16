@@ -52,6 +52,14 @@ class App {
                 return
             })
         });
+        this.express.get("/getProductsGenreLike", (req, res, next) => {
+            console.log("app.ts getProductsgenreLike req :", req.query.sql)
+            const sql: string = String(req.query.sql);
+            this.getDatabaseProductsGenreLike(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
         this.express.get("/getGenre", (req, res, next) => {
             console.log("/getGenre")
             const sql: string = String(req.query.sql);
@@ -103,6 +111,12 @@ class App {
     private getDatabaseProductsLike(sql){
         var mysql = Mysql
         return mysql.getProductsLike('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private getDatabaseProductsGenreLike(sql){
+        var mysql = Mysql
+        return mysql.getProductsGenreLike('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
