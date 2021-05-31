@@ -76,30 +76,39 @@ class App {
                 return
             })
         });
+        this.express.get("/searchProducts", (req, res, next) => {
+            console.log('app.ts/searchProduxts')
+            const sql: string = String(req.query.sql);
+            this.searchProducts(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
 
         // handle undefined routes
-        this.express.get("/api", (req, res, next) => {
-            const sql: string = String(req.query.sql);
+        // this.express.get("/api", (req, res, next) => {
+        //     const sql: string = String(req.query.sql);
 
-            console.log("paramssql", sql);
+        //     console.log("paramssql", sql);
 
-            if (sql == "undefined"){
-                this.databaseConnect().then(result =>{
-                    // console.log("result", result)
-                    console.log("Connect")
-                    res.send(result)
-                    return
-                });
-            }else{
-                this.databaseFind(sql).then(result =>{
-                    console.log("find-sql", sql)
-                    res.send(result)
-                    return
-                })
-            }
+        //     if (sql == "undefined"){
+        //         this.databaseConnect().then(result =>{
+        //             // console.log("result", result)
+        //             console.log("Connect")
+        //             console.log(result)
+        //             res.send(result)
+        //             return
+        //         });
+        //     }else{
+        //         this.databaseFind(sql).then(result =>{
+        //             console.log("find-sql", sql)
+        //             res.send(result)
+        //             return
+        //         })
+        //     }
 
 
-        });
+        // });
     }
     private getDatabaseProducts(sql){
         var mysql = Mysql
@@ -130,6 +139,13 @@ class App {
         console.log("getDatabeseCategory")
         var mysql = Mysql
         return mysql.getCategorys('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private searchProducts(sql){
+        console.log("searchProducts")
+        var mysql = Mysql
+        return mysql.searchProducts('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }

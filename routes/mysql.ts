@@ -109,6 +109,20 @@ export class Mysql {
         console.log("result", result)
         return result;
     }
+    public async searchProducts(host: string, user: string, password: string, database: string, sql: string) {
+        console.log("mysql.ts/searchProducts", sql);
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'SELECT * FROM new_products WHERE title LIKE "%' + sql + '%" or artist LIKE "%' + sql + '%"';
+        console.log(sqltext)
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
 
 
     public async connect(host: string, user: string, password: string, database: string) {
