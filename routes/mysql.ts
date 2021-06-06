@@ -3,7 +3,6 @@ import * as mysql from 'promise-mysql';
 export class Mysql {
     private connection: mysql.Connection;
     public async getProducts(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("getProducts", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -11,7 +10,16 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'SELECT * FROM new_products ' + sql;
+        let addSql
+        // collection ページでgenreをチェックしたとき用に追加
+        if (sql.indexOf('__') != -1) {
+            const genre = sql.split('__')[1]
+            addSql = sql.split('__')[0] + ' and genre LIKE "%' + genre.split('"')[1] + '%"'
+        } else {
+            addSql = sql
+        }
+        const sqltext = 'SELECT * FROM new_products ' + addSql;
+        console.log("getProducts", sqltext);
         const result = await this.connection.query(sqltext);
         return result;
     }
@@ -24,9 +32,11 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const colmun = sql.split('_')[0]
-        const value = sql.split('_')[1]
-        const sqltext = 'SELECT * FROM new_products WHERE ' + colmun + ' LIKE "%' + value + '%"';
+        const colmun = sql.split('__')[0]
+        const value = sql.split('__')[1]
+        const addSql = sql.split('__')[2]
+        const sqltext = 'SELECT * FROM new_products WHERE ' + colmun + ' LIKE "%' + value + '%"' + addSql;
+        console.log("sql", sqltext)
         const result = await this.connection.query(sqltext);
         return result;
     }
