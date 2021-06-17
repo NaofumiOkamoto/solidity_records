@@ -11,10 +11,17 @@ export class Mysql {
             multipleStatements: true
         });
         let addSql
+        console.log("test", sql)
         // collection ページでgenreをチェックしたとき用に追加
         if (sql.indexOf('__') != -1) {
-            const genre = sql.split('__')[1]
-            addSql = sql.split('__')[0] + ' and genre LIKE "%' + genre.split('"')[1] + '%"'
+            const genres = sql.split('__')[1]
+            const genresArray = genres.split('_')
+            addSql = sql.split('__')[0] + ' and (genre LIKE '
+            for ( let i = 0; i < genresArray.length; i++ ) {
+                if ( i !== 0 ) addSql += " or genre LIKE "
+                addSql += '"%' + genresArray[i] + '%"'
+                if ( i === genresArray.length - 1 ) addSql += ')'
+            }
         } else {
             addSql = sql
         }
