@@ -1,5 +1,28 @@
 import * as mysql from 'promise-mysql';
 
+// 商品並び順をソートする関数
+function sortProducts(key, order) {
+    return function(a, b) {
+        if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+            return 0; 
+        }
+        const varA = (typeof a[key] === 'string') ? 
+            a[key].toUpperCase() : a[key];
+        const varB = (typeof b[key] === 'string') ? 
+            b[key].toUpperCase() : b[key];
+    
+        let comparison = 0;
+        if (varA > varB) {
+            comparison = 1;
+        } else if (varA < varB) {
+            comparison = -1;
+        }
+        return (
+            (order == 'DESC') ? (comparison * -1) : comparison
+        );
+        };
+}
+
 export class Mysql {
     private connection: mysql.Connection;
     public async getProducts(host: string, user: string, password: string, database: string, sql: string) {
@@ -11,19 +34,22 @@ export class Mysql {
             multipleStatements: true
         });
         let addSql
-        console.log("test", sql)
+        // ソートする時の情報取得
+        const sort = ( sql.indexOf('___') )? sql.split('___')[1] : ''
+        const sqlCustom = ( sql.indexOf('___') )? sql.split('___')[0] : sql
         // collection ページでgenreをチェックしたとき用に追加
-        if (sql.indexOf('__') != -1) {
-            const genres = sql.split('__')[1]
+        if (sqlCustom.indexOf('__') != -1) {
+            const genres = sqlCustom.split('__')[1]
             const genresArray = genres.split('_')
-            addSql = sql.split('__')[0] + ' and (genre LIKE '
+            addSql = sqlCustom.split('___')[0].split('__')[0] + ' and (genre LIKE '
             for ( let i = 0; i < genresArray.length; i++ ) {
                 if ( i !== 0 ) addSql += " or genre LIKE "
                 addSql += '"%' + genresArray[i] + '%"'
                 if ( i === genresArray.length - 1 ) addSql += ')'
             }
+            addSql += sort
         } else {
-            addSql = sql
+            addSql = sqlCustom + (sort !== undefined)? sort : ''
         }
         const sqltext = 'SELECT * FROM new_products ' + addSql;
         console.log("getProducts", sqltext);
@@ -42,7 +68,8 @@ export class Mysql {
         const colmun = sql.split('__')[0]
         const value = sql.split('__')[1]
         const addSql = sql.split('__')[2]
-        const sqltext = 'SELECT * FROM new_products WHERE ' + colmun + ' LIKE "%' + value + '%"' + addSql;
+        const sort = sql.split('__')[3]
+        const sqltext = 'SELECT * FROM new_products WHERE ' + colmun + ' LIKE "%' + value + '%"' + addSql + sort;
         console.log("sql", sqltext)
         const result = await this.connection.query(sqltext);
         return result;
@@ -56,7 +83,8 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const arrayGenreId = sql.split('_')
+        const arrayGenreId = sql.split('__')[0].split('_')
+        const sortSql = sql.split('__')[1]
         let result = []
         for ( let i = 0; i < arrayGenreId.length; i++ ) {
             let sqltext
@@ -72,6 +100,7 @@ export class Mysql {
                 }
             }
         }
+        result.sort(sortProducts(sortSql.split(" ")[2], sortSql.split(" ")[3]))
         return result;
     }
     public async getGenre(host: string, user: string, password: string, database: string, sql: string) {
