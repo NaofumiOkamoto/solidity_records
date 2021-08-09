@@ -35,8 +35,8 @@ export class Mysql {
         });
         let addSql
         // ソートする時の情報取得
-        const sort = ( sql.indexOf('___') )? sql.split('___')[1] : ''
-        const sqlCustom = ( sql.indexOf('___') )? sql.split('___')[0] : sql
+        const sort = ( sql.indexOf('___') !== -1 )? sql.split('___')[1] : ''
+        const sqlCustom = ( sql.indexOf('___') !== -1 )? sql.split('___')[0] : sql
         // collection ページでgenreをチェックしたとき用に追加
         if (sqlCustom.indexOf('__') != -1) {
             const genres = sqlCustom.split('__')[1]
@@ -49,10 +49,10 @@ export class Mysql {
             }
             addSql += sort
         } else {
-            addSql = sqlCustom + (sort !== undefined)? sort : ''
+            addSql = sqlCustom + sort
         }
         const sqltext = 'SELECT * FROM new_products ' + addSql;
-        console.log("getProducts", sqltext);
+        console.log("mysql.ts/getProducts", sqltext);
         const result = await this.connection.query(sqltext);
         return result;
     }

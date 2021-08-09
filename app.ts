@@ -14,7 +14,6 @@ class App {
     public users: any[];
 
     constructor() {
-        console.log("app.ts constructor()")
         this.express = express();
         this.middleware();
         this.routes();
@@ -23,7 +22,6 @@ class App {
 
     // Configure Express middleware.
     private middleware(): void {
-        console.log("app.ts middleware()")
         const cors = require("cors")
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: false }));
@@ -61,7 +59,7 @@ class App {
             })
         });
         this.express.get("/getGenre", (req, res, next) => {
-            console.log("/getGenre")
+            console.log("app.ts/getGenre")
             const sql: string = String(req.query.sql);
             this.getDatabaseGenre(sql).then(result =>{
                 res.send(result)
