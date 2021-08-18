@@ -164,7 +164,14 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'SELECT * FROM new_products WHERE title LIKE "%' + sql + '%" or artist LIKE "%' + sql + '%"';
+        const selectedSql = sql.split('_')[0] // 選択した検索条件
+        const keywordSql = sql.split('_')[1] // 入力した検索文字
+        let sqltext = ''
+        if(selectedSql === 'all field'){
+            sqltext = 'SELECT * FROM new_products WHERE title LIKE "%' + keywordSql + '%" or artist LIKE "%' + keywordSql + '%"';
+        } else {
+            sqltext = 'SELECT * FROM new_products WHERE ' + selectedSql + ' LIKE "%' + keywordSql + '%"';
+        }
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;
