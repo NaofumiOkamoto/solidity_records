@@ -75,9 +75,33 @@ class App {
             })
         });
         this.express.get("/searchProducts", (req, res, next) => {
-            console.log('app.ts/searchProduxts')
             const sql: string = String(req.query.sql);
+            console.log('app.ts/searchProduxts', sql)
             this.searchProducts(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
+        this.express.get("/getGenreIdBySearchText", (req, res, next) => {
+            console.log('app.ts/getGenreIdBySearchText')
+            const sql: string = String(req.query.sql);
+            this.getGenreIdBySearchText(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
+        this.express.get("/updateProduct", (req, res, next) => {
+            console.log('app.ts/updateProduct')
+            const sql: string = String(req.query.sql);
+            this.updateProdcut(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
+        this.express.get("/createProduct", (req, res, next) => {
+            console.log('app.ts/createProduct')
+            const sql: string = String(req.query.sql);
+            this.createProdcut(sql).then(result =>{
                 res.send(result)
                 return
             })
@@ -144,6 +168,25 @@ class App {
         console.log("searchProducts")
         var mysql = Mysql
         return mysql.searchProducts('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private getGenreIdBySearchText(sql){
+        console.log("getGenreIdBySearchText")
+        var mysql = Mysql
+        return mysql.getGenreIdBySearchText('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private updateProdcut(sql){
+        var mysql = Mysql
+        return mysql.updateProduct('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private createProdcut(sql){
+        var mysql = Mysql
+        return mysql.createProduct('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }

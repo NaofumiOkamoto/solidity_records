@@ -56,6 +56,7 @@ export class Mysql {
         const result = await this.connection.query(sqltext);
         return result;
     }
+    // 小ジャンルidで商品を探し出す
     public async getProductsLike(host: string, user: string, password: string, database: string, sql: string) {
         console.log("getProductsLike", sql);
         this.connection = await mysql.createConnection({
@@ -103,6 +104,7 @@ export class Mysql {
         result.sort(sortProducts(sortSql.split(" ")[2], sortSql.split(" ")[3]))
         return result;
     }
+    // products テーブルのgenreカラム(id_id_id....)からジャンル名を取得
     public async getGenre(host: string, user: string, password: string, database: string, sql: string) {
         console.log("getGenre", sql);
         this.connection = await mysql.createConnection({
@@ -166,12 +168,54 @@ export class Mysql {
         });
         const selectedSql = sql.split('_')[0] // 選択した検索条件
         const keywordSql = sql.split('_')[1] // 入力した検索文字
+        const statusSql = sql.split('_')[2] === 'undefined' || sql.split('_')[2] === ''? '' : ' and product_status = "' + sql.split('_')[2] + '"' // status
         let sqltext = ''
         if(selectedSql === 'all field'){
-            sqltext = 'SELECT * FROM new_products WHERE title LIKE "%' + keywordSql + '%" or artist LIKE "%' + keywordSql + '%"';
+            sqltext = 'SELECT * FROM new_products WHERE (title LIKE "%' + keywordSql + '%" or artist LIKE "%' + keywordSql + '%")' + statusSql;
         } else {
-            sqltext = 'SELECT * FROM new_products WHERE ' + selectedSql + ' LIKE "%' + keywordSql + '%"';
+            sqltext = 'SELECT * FROM new_products WHERE ' + selectedSql + ' LIKE "%' + keywordSql;
         }
+        console.log('sql : ', sqltext)
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
+    public async getGenreIdBySearchText(host: string, user: string, password: string, database: string, sql: string) {
+        console.log("mysql.ts/searchProducts", sql);
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'SELECT * FROM new_genre WHERE sub LIKE "%' + sql + '%"';
+        console.log(sqltext)
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
+    public async updateProduct(host: string, user: string, password: string, database: string, sql: string) {
+        console.log("mysql.ts/updateProduct", sql);
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'UPDATE new_Products SET' + sql;
+        console.log(sqltext)
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
+    public async createProduct(host: string, user: string, password: string, database: string, sql: string) {
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'INSERT INTO new_Products ' + sql;
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;
