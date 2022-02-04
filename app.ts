@@ -34,6 +34,7 @@ class App {
         // user route
         this.express.use("/api", Routes);
         this.express.use("/getApi", Routes);
+        this.express.use("/getNotDuplicateData", Routes);
 
         this.express.get("/getApi", (req, res, next) => {
             console.log("app.ts getApi req :", req.query.sql)
