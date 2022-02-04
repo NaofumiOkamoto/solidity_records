@@ -91,6 +91,14 @@ class App {
                 return
             })
         });
+        this.express.get("/getNotDuplicateData", (req, res, next) => {
+            console.log('app.ts/getNotDuplicateData')
+            const sql: string = String(req.query.sql);
+            this.getNotDuplicateData(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
         this.express.get("/updateProduct", (req, res, next) => {
             console.log('app.ts/updateProduct')
             const sql: string = String(req.query.sql);
@@ -103,14 +111,6 @@ class App {
             console.log('app.ts/createProduct')
             const sql: string = String(req.query.sql);
             this.createProdcut(sql).then(result =>{
-                res.send(result)
-                return
-            })
-        });
-        this.express.get("/getNotDuplicateData", (req, res, next) => {
-            console.log('app.ts/getNotDuplicateData')
-            const sql: string = String(req.query.sql);
-            this.getNotDuplicateData(sql).then(result =>{
                 res.send(result)
                 return
             })
