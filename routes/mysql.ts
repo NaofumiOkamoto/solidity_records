@@ -209,7 +209,7 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'UPDATE new_Products SET' + sql;
+        const sqltext = 'UPDATE new_products SET' + sql;
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;
@@ -222,7 +222,7 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'INSERT INTO new_Products ' + sql;
+        const sqltext = 'INSERT INTO new_products ' + sql;
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;
@@ -235,7 +235,7 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'SELECT distinct ' + sql + ' FROM new_Products'
+        const sqltext = 'SELECT distinct ' + sql + ' FROM new_products'
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;
