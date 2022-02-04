@@ -169,11 +169,18 @@ export class Mysql {
         const selectedSql = sql.split('_')[0] // 選択した検索条件
         const keywordSql = sql.split('_')[1] // 入力した検索文字
         const statusSql = sql.split('_')[2] === 'undefined' || sql.split('_')[2] === ''? '' : ' and product_status = "' + sql.split('_')[2] + '"' // status
+        const limit = sql.split('_')[3] // 何件取得するか
+        const ofset = sql.split('_')[4] // 何件よりあとをとるか
+        // 何件目から何件目まで取得か
+        let limitSql = ''
+        if ((/[0-9]/).test(limit) && (/[0-9]/).test(ofset)) {
+            limitSql = ' LIMIT ' + ofset + ', ' + limit
+        }
         let sqltext = ''
         if(selectedSql === 'all field'){
-            sqltext = 'SELECT * FROM new_products WHERE (title LIKE "%' + keywordSql + '%" or artist LIKE "%' + keywordSql + '%")' + statusSql;
+            sqltext = 'SELECT * FROM new_products WHERE (title LIKE "%' + keywordSql + '%" or artist LIKE "%' + keywordSql + '%")' + statusSql + limitSql;
         } else {
-            sqltext = 'SELECT * FROM new_products WHERE ' + selectedSql + ' LIKE "%' + keywordSql;
+            sqltext = 'SELECT * FROM new_products WHERE ' + selectedSql + ' LIKE "%' + keywordSql + limitSql;
         }
         console.log('sql : ', sqltext)
         const result = await this.connection.query(sqltext);
@@ -216,6 +223,19 @@ export class Mysql {
             multipleStatements: true
         });
         const sqltext = 'INSERT INTO new_Products ' + sql;
+        console.log(sqltext)
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
+    public async getNotDuplicateData(host: string, user: string, password: string, database: string, sql: string) {
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'SELECT distinct ' + sql + ' FROM new_Products'
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;

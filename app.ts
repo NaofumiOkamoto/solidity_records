@@ -106,6 +106,14 @@ class App {
                 return
             })
         });
+        this.express.get("/getNotDuplicateData", (req, res, next) => {
+            console.log('app.ts/getNotDuplicateData')
+            const sql: string = String(req.query.sql);
+            this.getNotDuplicateData(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
 
         // handle undefined routes
         // this.express.get("/api", (req, res, next) => {
@@ -187,6 +195,12 @@ class App {
     private createProdcut(sql){
         var mysql = Mysql
         return mysql.createProduct('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private getNotDuplicateData(sql){
+        var mysql = Mysql
+        return mysql.getNotDuplicateData('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
