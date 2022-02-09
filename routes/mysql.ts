@@ -119,8 +119,8 @@ export class Mysql {
         let result = []
         // genreが1つの時
         if ( sliceSql.indexOf('_') === -1 && sql !== 'genre' && sql.indexOf('main') === -1 ) {
-            console.log("genreが1つの時")
             const sqltext = 'SELECT * FROM new_genre ' + sql;
+            console.log("genreが1つの時", sqltext)
             result.push((await this.connection.query(sqltext))[0]);
         // genreが2つ以上ある時 (101_102など)
         } else if ( sliceSql.indexOf('_') !== -1 && sql.indexOf('All') === -1 ) {
@@ -166,11 +166,12 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const selectedSql = sql.split('_')[0] // 選択した検索条件
-        const keywordSql = sql.split('_')[1] // 入力した検索文字
-        const statusSql = sql.split('_')[2] === 'undefined' || sql.split('_')[2] === ''? '' : ' and product_status = "' + sql.split('_')[2] + '"' // status
-        const limit = sql.split('_')[3] // 何件取得するか
-        const ofset = sql.split('_')[4] // 何件よりあとをとるか
+        const selectedSql = sql.split('__')[0] // 選択した検索条件
+        const keywordSql = sql.split('__')[1] // 入力した検索文字
+        const statusSql = (sql.split('__')[2] === 'undefined' || sql.split('__')[2] === '') ? '' : ' and product_status = "' + sql.split('__')[2] + '"' // status
+        const limit = sql.split('__')[3] // 何件取得するか
+        const ofset = sql.split('__')[4] // 何件よりあとをとるか
+        const sort = sql.split('__')[5] // sort順
         // 何件目から何件目まで取得か
         let limitSql = ''
         if ((/[0-9]/).test(limit) && (/[0-9]/).test(ofset)) {
@@ -178,9 +179,9 @@ export class Mysql {
         }
         let sqltext = ''
         if(selectedSql === 'all field'){
-            sqltext = 'SELECT * FROM new_products WHERE (title LIKE "%' + keywordSql + '%" or artist LIKE "%' + keywordSql + '%")' + statusSql + limitSql;
+            sqltext = 'SELECT * FROM new_products WHERE (title LIKE "%' + keywordSql + '%" or artist LIKE "%' + keywordSql + '%")' + statusSql + sort + limitSql;
         } else {
-            sqltext = 'SELECT * FROM new_products WHERE ' + selectedSql + ' LIKE "%' + keywordSql + limitSql;
+            sqltext = 'SELECT * FROM new_products WHERE ' + selectedSql + ' LIKE "%' + keywordSql + sort + limitSql;
         }
         console.log('sql : ', sqltext)
         const result = await this.connection.query(sqltext);
