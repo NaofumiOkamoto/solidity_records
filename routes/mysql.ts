@@ -188,7 +188,6 @@ export class Mysql {
         return result;
     }
     public async getGenreIdBySearchText(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("mysql.ts/searchProducts", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -196,7 +195,15 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'SELECT * FROM new_genre WHERE sub LIKE "%' + sql + '%"';
+        // let sqltext = 'SELECT * FROM new_genre WHERE sub LIKE "%' + sql + '%"';
+        let sqltext = 'SELECT * FROM new_genre WHERE sub = "' + sql + '"';
+        if (sql.indexOf('_') !== -1) {
+            sqltext = 'SELECT * FROM new_genre WHERE'
+            for (let i = 0; i < sql.split('_').length; i++) {
+                sqltext += ' sub = "' + sql.split('_')[i] + '" or'
+            }
+            sqltext = sqltext.slice( 0, -2 )
+        }
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;
