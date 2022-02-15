@@ -115,6 +115,14 @@ class App {
                 return
             })
         });
+        this.express.get("/updateGenre", (req, res, next) => {
+            console.log('app.ts/updateGenre')
+            const sql: string = String(req.query.sql);
+            this.updateGenre(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
 
         // handle undefined routes
         // this.express.get("/api", (req, res, next) => {
@@ -202,6 +210,12 @@ class App {
     private getNotDuplicateData(sql){
         var mysql = Mysql
         return mysql.getNotDuplicateData('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private updateGenre(sql){
+        var mysql = Mysql
+        return mysql.updateGenre('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
