@@ -52,13 +52,11 @@ export class Mysql {
             addSql = sqlCustom + sort
         }
         const sqltext = 'SELECT * FROM new_products ' + addSql;
-        console.log("mysql.ts/getProducts", sqltext);
         const result = await this.connection.query(sqltext);
         return result;
     }
     // 小ジャンルidで商品を探し出す
     public async getProductsLike(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("getProductsLike", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -76,7 +74,6 @@ export class Mysql {
         return result;
     }
     public async getProductsGenreLike(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("getProductsGenreLike", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -106,7 +103,6 @@ export class Mysql {
     }
     // products テーブルのgenreカラム(id_id_id....)からジャンル名を取得
     public async getGenre(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("getGenre", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -143,7 +139,6 @@ export class Mysql {
     }
 
     public async getCategorys(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("getCategorys", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -154,11 +149,9 @@ export class Mysql {
         const sqltext = 'select distinct `' + sql +  '` from new_products order by `' + sql + '` ASC';
         console.log("sqltext", sqltext)
         const result = await this.connection.query(sqltext);
-        console.log("result", result)
         return result;
     }
     public async searchProducts(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("mysql.ts/searchProducts", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -169,9 +162,9 @@ export class Mysql {
         const selectedSql = sql.split('__')[0] // 選択した検索条件
         const keywordSql = sql.split('__')[1] // 入力した検索文字
         const statusSql = (sql.split('__')[2] === 'undefined' || sql.split('__')[2] === '') ? '' : ' and product_status = "' + sql.split('__')[2] + '"' // status
-        const limit = sql.split('__')[3] // 何件取得するか
-        const ofset = sql.split('__')[4] // 何件よりあとをとるか
-        const sort = sql.split('__')[5] // sort順
+        const limit = (sql.split('__')[3] === undefined) ? '' : sql.split('__')[3] // 何件取得するか
+        const ofset = (sql.split('__')[4] === undefined) ? '' : sql.split('__')[4] // 何件よりあとをとるか
+        const sort =  (sql.split('__')[5] === undefined) ? '' : sql.split('__')[5] // sort順
         // 何件目から何件目まで取得か
         let limitSql = ''
         if ((/[0-9]/).test(limit) && (/[0-9]/).test(ofset)) {
@@ -209,7 +202,6 @@ export class Mysql {
         return result;
     }
     public async updateProduct(host: string, user: string, password: string, database: string, sql: string) {
-        console.log("mysql.ts/updateProduct", sql);
         this.connection = await mysql.createConnection({
             host: host,
             user: user,
@@ -264,7 +256,6 @@ export class Mysql {
 
 
     public async connect(host: string, user: string, password: string, database: string) {
-        console.log("mysql.ts connect")
         this.connection = await mysql.createConnection({
             host: host,
             user: user,

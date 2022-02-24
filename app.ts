@@ -175,21 +175,18 @@ class App {
         })
     }
     private getDatabaseCategory(sql){
-        console.log("getDatabeseCategory")
         var mysql = Mysql
         return mysql.getCategorys('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private searchProducts(sql){
-        console.log("searchProducts")
         var mysql = Mysql
         return mysql.searchProducts('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
     private getGenreIdBySearchText(sql){
-        console.log("getGenreIdBySearchText")
         var mysql = Mysql
         return mysql.getGenreIdBySearchText('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
