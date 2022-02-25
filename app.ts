@@ -123,6 +123,14 @@ class App {
                 return
             })
         });
+        this.express.get("/searchOrders", (req, res, next) => {
+            console.log('app.ts/searchOrders')
+            const sql: string = String(req.query.sql);
+            this.searchOrders(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
 
         // handle undefined routes
         // this.express.get("/api", (req, res, next) => {
@@ -213,6 +221,12 @@ class App {
     private updateGenre(sql){
         var mysql = Mysql
         return mysql.updateGenre('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private searchOrders(sql){
+        var mysql = Mysql
+        return mysql.searchOrders('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }

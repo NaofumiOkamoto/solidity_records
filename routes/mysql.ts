@@ -253,6 +253,19 @@ export class Mysql {
         const result = await this.connection.query(sqltext);
         return result;
     }
+    public async searchOrders(host: string, user: string, password: string, database: string, sql: string) {
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        const sqltext = 'SELECT * from orders'// + sql;
+        console.log(sqltext)
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
 
 
     public async connect(host: string, user: string, password: string, database: string) {
