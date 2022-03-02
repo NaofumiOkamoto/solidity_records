@@ -261,7 +261,17 @@ export class Mysql {
             database: database,
             multipleStatements: true
         });
-        const sqltext = 'SELECT * from orders'// + sql;
+        const keywordSql = sql.split('__')[1] // 入力した検索文字
+        const statusSql = (sql.split('__')[2] === undefined || sql.split('__')[2] === '') ? '' : ' and product_status = "' + sql.split('__')[2] + '"' // status
+        const limit = (sql.split('__')[3] === undefined) ? '' : sql.split('__')[3] // 何件取得するか
+        const ofset = (sql.split('__')[4] === undefined) ? '' : sql.split('__')[4] // 何件よりあとをとるか
+        const sort =  (sql.split('__')[5] === undefined) ? '' : sql.split('__')[5] // sort順
+        // 何件目から何件目まで取得か
+        let limitSql = ''
+        if ((/[0-9]/).test(limit) && (/[0-9]/).test(ofset)) {
+            limitSql = ' LIMIT ' + ofset + ', ' + limit
+        }
+        const sqltext = 'SELECT * FROM orders WHERE ' +  'Name LIKE "%' + keywordSql + '%"' + sort + limitSql;
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;
