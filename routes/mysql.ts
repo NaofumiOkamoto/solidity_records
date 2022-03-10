@@ -276,6 +276,27 @@ export class Mysql {
         const result = await this.connection.query(sqltext);
         return result;
     }
+    public async searchCustomers(host: string, user: string, password: string, database: string, sql: string) {
+        this.connection = await mysql.createConnection({
+            host: host, user: user, password: password, database: database, multipleStatements: true
+        });
+        const keywordSql = sql.split('__')[1] // 入力した検索文字
+        const statusSql = (sql.split('__')[2] === undefined || sql.split('__')[2] === '') ? '' : ' and product_status = "' + sql.split('__')[2] + '"' // status
+        const limit = (sql.split('__')[3] === undefined) ? '' : sql.split('__')[3] // 何件取得するか
+        const ofset = (sql.split('__')[4] === undefined) ? '' : sql.split('__')[4] // 何件よりあとをとるか
+        const sort =  (sql.split('__')[5] === undefined) ? '' : sql.split('__')[5] // sort順
+        // 何件目から何件目まで取得か
+        let limitSql = ''
+        if ((/[0-9]/).test(limit) && (/[0-9]/).test(ofset)) {
+            limitSql = ' LIMIT ' + ofset + ', ' + limit
+        }
+        // const sqltext = 'SELECT * FROM customers WHERE ' + 'First Name LIKE "%' + keywordSql + '%"' + sort + limitSql;
+        // ToDo: search Customer sort
+        const sqltext = 'SELECT * FROM customers WHERE ' + '"First Name" LIKE "%' + keywordSql + '%"' + limitSql;
+        console.log(sqltext)
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
 
 
     public async connect(host: string, user: string, password: string, database: string) {

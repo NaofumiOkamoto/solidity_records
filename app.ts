@@ -131,6 +131,14 @@ class App {
                 return
             })
         });
+        this.express.get("/searchCustomers", (req, res, next) => {
+            console.log('app.ts/searchCustomers')
+            const sql: string = String(req.query.sql);
+            this.searchCustomers(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
 
         // handle undefined routes
         // this.express.get("/api", (req, res, next) => {
@@ -227,6 +235,12 @@ class App {
     private searchOrders(sql){
         var mysql = Mysql
         return mysql.searchOrders('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private searchCustomers(sql){
+        var mysql = Mysql
+        return mysql.searchCustomers('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
