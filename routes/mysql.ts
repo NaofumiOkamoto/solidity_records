@@ -271,7 +271,21 @@ export class Mysql {
         if ((/[0-9]/).test(limit) && (/[0-9]/).test(ofset)) {
             limitSql = ' LIMIT ' + ofset + ', ' + limit
         }
-        const sqltext = 'SELECT * FROM orders WHERE ' +  'Name LIKE "%' + keywordSql + '%"' + sort + limitSql;
+        const sqltext = 'SELECT * FROM orders WHERE 0 < Id AND Name LIKE "%' + keywordSql + '%"' + sort + limitSql;
+        console.log(sqltext)
+        const result = await this.connection.query(sqltext);
+        return result;
+    }
+    public async getOrder(host: string, user: string, password: string, database: string, sql: string) {
+        this.connection = await mysql.createConnection({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            multipleStatements: true
+        });
+        // 何件目から何件目まで取得か
+        const sqltext = 'SELECT * FROM orders ' + sql;
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;

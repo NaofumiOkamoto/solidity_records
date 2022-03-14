@@ -131,6 +131,14 @@ class App {
                 return
             })
         });
+        this.express.get("/getOrder", (req, res, next) => {
+            const sql: string = String(req.query.sql);
+            console.log('app.ts/getOrder', sql)
+            this.getOrder(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
         this.express.get("/searchCustomers", (req, res, next) => {
             console.log('app.ts/searchCustomers')
             const sql: string = String(req.query.sql);
@@ -235,6 +243,12 @@ class App {
     private searchOrders(sql){
         var mysql = Mysql
         return mysql.searchOrders('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private getOrder(sql){
+        var mysql = Mysql
+        return mysql.getOrder('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
