@@ -255,11 +255,7 @@ export class Mysql {
     }
     public async searchOrders(host: string, user: string, password: string, database: string, sql: string) {
         this.connection = await mysql.createConnection({
-            host: host,
-            user: user,
-            password: password,
-            database: database,
-            multipleStatements: true
+            host: host, user: user, password: password, database: database, multipleStatements: true
         });
         const keywordSql = sql.split('__')[1] // 入力した検索文字
         const statusSql = (sql.split('__')[2] === undefined || sql.split('__')[2] === '') ? '' : ' and product_status = "' + sql.split('__')[2] + '"' // status
@@ -278,17 +274,30 @@ export class Mysql {
     }
     public async getOrder(host: string, user: string, password: string, database: string, sql: string) {
         this.connection = await mysql.createConnection({
-            host: host,
-            user: user,
-            password: password,
-            database: database,
-            multipleStatements: true
+            host: host, user: user, password: password, database: database, multipleStatements: true
         });
-        // 何件目から何件目まで取得か
         const sqltext = 'SELECT * FROM orders ' + sql;
         console.log(sqltext)
         const result = await this.connection.query(sqltext);
         return result;
+    }
+    public async getOrderProducts(host: string, user: string, password: string, database: string, sql: string) {
+        this.connection = await mysql.createConnection({
+            host: host, user: user, password: password, database: database, multipleStatements: true
+        });
+        const name = sql === '' ? '' : '"#' + sql + '"'
+        const sqltext = 'SELECT * FROM orders where Name = ' + name;
+        console.log(sqltext)
+        const result = await this.connection.query(sqltext);
+        let skus = []
+        for (let i = 0; i < result.length; i++) {
+            skus.push(result[i]['Lineitem sku'])
+        }
+        const productSql = 'SELECT * FROM new_products where item_id in (' + skus + ')';
+        console.log(productSql)
+        const productResult = await this.connection.query(productSql);
+        console.log(productResult)
+        return productResult;
     }
     public async searchCustomers(host: string, user: string, password: string, database: string, sql: string) {
         this.connection = await mysql.createConnection({
