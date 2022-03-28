@@ -162,6 +162,14 @@ class App {
                 return
             })
         });
+        this.express.get("/coutCustomersOrder", (req, res, next) => {
+            console.log('app.ts/coutCustomersOrder')
+            const sql: string = String(req.query.sql);
+            this.coutCustomersOrder(sql).then(result =>{
+                res.send(result)
+                return
+            })
+        });
 
         // handle undefined routes
         // this.express.get("/api", (req, res, next) => {
@@ -282,6 +290,12 @@ class App {
     private getCustomer(sql){
         var mysql = Mysql
         return mysql.getCustomer('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
+            return result;
+        })
+    }
+    private coutCustomersOrder(sql){
+        var mysql = Mysql
+        return mysql.coutCustomersOrder('localhost', 'root', 'N-okamoto0803', 'solidity_records', sql).then( result =>{
             return result;
         })
     }
